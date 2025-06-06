@@ -14,6 +14,7 @@ def get_employeeDict():
         #print(schedule.to_string())
 
         schedule[8] = schedule[8].replace(np.nan, '0')
+        #/Users/derek/Documents/vova/zone chart/zonechart/data/employee test.xlsx
 
         for  i in range(len(schedule)):
             if schedule.iloc[i, 8] != '0' and schedule.iloc[i, 8] != "Employee" and schedule.iloc[i, 8] not in employeeDict:
