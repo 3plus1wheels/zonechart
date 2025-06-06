@@ -1,0 +1,9 @@
+time = col 10
+name = col 8
+class management/stylist = 
+8-8 ricky I10
+9-8 ricky I11
+
+[row,col]
+col-1
+row-1
