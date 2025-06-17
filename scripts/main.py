@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from employees import employee
-from timeconverter import convertTo24, convertTo12
+from timeconverter import *
 from openpyxl import load_workbook
 from datetime import datetime
 
@@ -9,7 +9,7 @@ def get_employeeDict():
 
         employeeDict = {}
 
-        scheduleRaw = pd.read_excel("data/example.xlsx", header = None, skiprows=9)
+        scheduleRaw = pd.read_excel("data/_Report Output_StaffingSheetDaily_chnguyen_2025-06-12T20_48_34.122.xlsx", header = None, skiprows=9)
         schedule = scheduleRaw.copy()
         #print(schedule.to_string())
 
@@ -51,28 +51,31 @@ def dictToSorted2DArray(employeeDict):
     
             
 
-def writeToExcel(day):
+def fillExcel(day):
 
     file_path = "data/playground copy.xlsx"
     wb = load_workbook(file_path)
-    ws = wb["Monday"]  
+    ws = wb[day]  
 
     employeeArray = dictToSorted2DArray(get_employeeDict())
 
     excelCount = 18
 
     shift = 0
-    if day == "weekday":
-        shift = 0
-    elif day == "saturday":
-        shift = 1
-    elif day == "sunday":
-        shift = 2
 
+    
+    '''
+    if day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
+        shift = 0
+    elif day == "Saturday":
+        shift = 1
+    elif day == "Sunday":
+        shift = 2
+    '''
     for i in range(len(employeeArray)): 
         values = employeeArray[i]
         ws[f"H{excelCount}"] = values[0]
-        ws[f"I{excelCount}"] = f"{convertTo12(values[1])} - {convertTo12(values[2])}"
+        ws[f"I{excelCount}"] = f"{noAMPM(convertTo12(values[1]))} - {noAMPM(convertTo12(values[2]))}"
 
         
         
@@ -92,12 +95,25 @@ def writeToExcel(day):
             
         excelCount += 1
     # Save the workbook
-
-    
-
     wb.save(file_path)
     
+def whoWorks(day):
 
+    file_path = "data/playground copy.xlsx"
+    wb = load_workbook(file_path)
+    ws = wb[day]  
 
-writeToExcel("weekday")
+    excelCount = 18
 
+    shift = 0
+
+    if day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
+        shift = 0
+    elif day == "Saturday":
+        shift = 1
+    elif day == "Sunday":
+        shift = 2
+
+    startingHr = 9 + shift
+
+fillExcel("Monday")

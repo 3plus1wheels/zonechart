@@ -23,7 +23,8 @@ class employee:
                 print(cell.text, end="\t")
             print()
 
-    table = doc.tables[0]
+    
+    
 
     
 
