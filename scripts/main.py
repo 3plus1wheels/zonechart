@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from employees import employee
 from timeconverter import *
 from openpyxl import load_workbook
 from datetime import datetime
@@ -9,12 +8,10 @@ def get_employeeDict():
 
         employeeDict = {}
 
-        scheduleRaw = pd.read_excel("data/_Report Output_StaffingSheetDaily_chnguyen_2025-06-12T20_48_34.122.xlsx", header = None, skiprows=9)
+        scheduleRaw = pd.read_excel("data/_Report Output_StaffingSheetDaily_chnguyen_2025-06-17T22_47_27.891.xlsx", header = None, skiprows=9)
         schedule = scheduleRaw.copy()
-        #print(schedule.to_string())
 
         schedule[8] = schedule[8].replace(np.nan, '0')
-        #/Users/derek/Documents/vova/zone chart/zonechart/data/employee test.xlsx
 
         for  i in range(len(schedule)):
             if schedule.iloc[i, 8] != '0' and schedule.iloc[i, 8] != "Employee" and schedule.iloc[i, 8] not in employeeDict:
@@ -53,6 +50,10 @@ def dictToSorted2DArray(employeeDict):
 
 def fillExcel(day):
 
+    if day not in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]:
+        print("Invalid day")
+        return 
+
     file_path = "data/playground copy.xlsx"
     wb = load_workbook(file_path)
     ws = wb[day]  
@@ -64,14 +65,9 @@ def fillExcel(day):
     shift = 0
 
     
-    '''
-    if day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
-        shift = 0
-    elif day == "Saturday":
-        shift = 1
-    elif day == "Sunday":
-        shift = 2
-    '''
+    
+        
+    
     for i in range(len(employeeArray)): 
         values = employeeArray[i]
         ws[f"H{excelCount}"] = values[0]
@@ -97,7 +93,7 @@ def fillExcel(day):
     # Save the workbook
     wb.save(file_path)
     
-def whoWorks(day):
+def whoWorks(day,time):
 
     file_path = "data/playground copy.xlsx"
     wb = load_workbook(file_path)
@@ -107,13 +103,29 @@ def whoWorks(day):
 
     shift = 0
 
-    if day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
+    result = []
+
+    
+    if day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]:
         shift = 0
-    elif day == "Saturday":
-        shift = 1
     elif day == "Sunday":
         shift = 2
+    else:
+        print("Invalid day")
+        return
 
-    startingHr = 9 + shift
+    index = -8 + time - shift + 74 # 74 is the ASCII value for 'J'
 
-fillExcel("Monday")
+    total = len(get_employeeDict())
+
+    print(chr(index))
+
+    for i in range(total):
+        if ws[f"{chr(index)}{excelCount}"].value == "1":
+            print(ws[f"H{excelCount}"].value, ws[f"I{excelCount}"].value)
+            result.append(ws[f"H{excelCount}"].value)
+        excelCount += 1
+
+    return result
+
+whoWorks("Wednesday", 16)
