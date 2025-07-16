@@ -8,7 +8,7 @@ def get_employeeDict():
 
         employeeDict = {}
 
-        scheduleRaw = pd.read_excel("data/_Report Output_StaffingSheetDaily_chnguyen_2025-06-17T22_47_27.891.xlsx", header = None, skiprows=9)
+        scheduleRaw = pd.read_excel("data\_Report Output_StaffingSheetDaily_chnguyen_2025-07-16T00_11_05.181.xlsx", header = None, skiprows=9)
         schedule = scheduleRaw.copy()
 
         schedule[8] = schedule[8].replace(np.nan, '0')
@@ -16,12 +16,16 @@ def get_employeeDict():
         for  i in range(len(schedule)):
             if schedule.iloc[i, 8] != '0' and schedule.iloc[i, 8] != "Employee" and schedule.iloc[i, 8] not in employeeDict:
                 time = schedule.iloc[i, 10]
+                if "X" in time:
+                    time = time.split("X")[0].strip()
                 timeSplit = time.split("-")
                 start_time = convertTo24(timeSplit[0].strip())
                 end_time = convertTo24(timeSplit[1].strip())
                 employeeDict[schedule.iloc[i, 8]] = [start_time, end_time]
             elif schedule.iloc[i, 8] in employeeDict:
                 time = schedule.iloc[i, 10]
+                if "X" in time:
+                    time = time.split("X")[0].strip()
                 timeSplit = time.split("-")
                 end_time = convertTo24(timeSplit[1].strip())
                 old_time = employeeDict[schedule.iloc[i, 8]]
@@ -50,9 +54,17 @@ def dictToSorted2DArray(employeeDict):
 
 def fillExcel(day):
 
-    if day not in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]:
+    if day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
+        shift = 0
+    elif day == "Saturday":
+        shift = 1
+    elif day == "Sunday":
+        shift = 2
+    else:
         print("Invalid day")
-        return 
+        return
+    
+    
 
     file_path = "data/playground copy.xlsx"
     wb = load_workbook(file_path)
@@ -62,16 +74,19 @@ def fillExcel(day):
 
     excelCount = 18
 
-    shift = 0
 
-    
-    
-        
-    
+
+
     for i in range(len(employeeArray)): 
         values = employeeArray[i]
-        ws[f"H{excelCount}"] = values[0]
-        ws[f"I{excelCount}"] = f"{noAMPM(convertTo12(values[1]))} - {noAMPM(convertTo12(values[2]))}"
+
+        
+        if day == "Saturday":
+            ws[f"I{excelCount}"] = values[0]
+            ws[f"J{excelCount}"] = f"{noAMPM(convertTo12(values[1]))} - {noAMPM(convertTo12(values[2]))}"
+        else:
+            ws[f"H{excelCount}"] = values[0]
+            ws[f"I{excelCount}"] = f"{noAMPM(convertTo12(values[1]))} - {noAMPM(convertTo12(values[2]))}"
 
         
         
@@ -128,4 +143,4 @@ def whoWorks(day,time):
 
     return result
 
-whoWorks("Wednesday", 16)
+fillExcel("Friday")
