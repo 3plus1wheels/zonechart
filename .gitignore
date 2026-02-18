@@ -1,5 +1,50 @@
-scripts/__pycache__/employees.cpython-313.pyc
-scripts/__pycache__/timeconverter.cpython-313.pyc
-data/_Report Output_StaffingSheetDaily_chnguyen_2025-07-16T00_11_05.181.xlsx
-data/playground copy.xlsx
-data/playground copy.xlsx
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# React / Node
+frontend/node_modules/
+frontend/build/
+frontend/.pnp
+frontend/.pnp.js
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+frontend/coverage/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
