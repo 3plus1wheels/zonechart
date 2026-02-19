@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 
 const AuthContext = createContext(null);
 
@@ -6,17 +6,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is logged in on mount
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      fetchUser(token);
-    } else {
-      setLoading(false);
-    }
+  const logout = useCallback(() => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setUser(null);
   }, []);
 
-  const fetchUser = async (token) => {
+  const fetchUser = useCallback(async (token) => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/auth/user/', {
         headers: {
@@ -35,7 +31,17 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [logout]);
+
+  useEffect(() => {
+    // Check if user is logged in on mount
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      fetchUser(token);
+    } else {
+      setLoading(false);
+    }
+  }, [fetchUser]);
 
   const login = async (username, password) => {
     try {
@@ -77,18 +83,11 @@ export const AuthProvider = ({ children }) => {
         throw new Error(JSON.stringify(error));
       }
 
-      const data = await response.json();
       // After registration, log the user in
       return await login(username, password);
     } catch (error) {
       return { success: false, error: error.message };
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    setUser(null);
   };
 
   const value = {

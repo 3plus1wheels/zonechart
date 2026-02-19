@@ -1,0 +1,629 @@
+.schedule-tab {
+  padding: 20px;
+  color: white;
+  position: relative;
+  min-height: 400px;
+}
+
+/* ── Header ── */
+.schedule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.schedule-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.schedule-header-left h2 {
+  margin: 0;
+  color: #61dafb;
+  font-size: 22px;
+}
+
+.schedule-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Week nav ── */
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-nav button {
+  padding: 6px 12px;
+  background: #3a3f47;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition: background 0.2s;
+}
+
+.week-nav button:hover { background: #4a505a; }
+
+.week-label {
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 180px;
+  text-align: center;
+  color: #ddd;
+}
+
+.today-btn {
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+  background: #61dafb !important;
+  color: #282c34 !important;
+  font-weight: bold;
+}
+
+.today-btn:hover { background: #4fa8c5 !important; }
+
+/* ── View toggle ── */
+.view-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #4a505a;
+}
+
+.view-toggle button {
+  padding: 7px 14px;
+  background: #3a3f47;
+  color: #aaa;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.view-toggle button.active {
+  background: #61dafb;
+  color: #282c34;
+  font-weight: bold;
+}
+
+/* ── Import button ── */
+.import-btn {
+  padding: 8px 16px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.import-btn:hover:not(:disabled) { background: #388e3c; }
+.import-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.inspect-btn {
+  padding: 8px 14px;
+  background: #555;
+  color: #ddd;
+  border: 1px solid #666;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.inspect-btn:hover:not(:disabled) { background: #666; }
+.inspect-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Messages ── */
+.schedule-error {
+  background: #c62828;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.schedule-success {
+  background: #2e7d32;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.schedule-warning {
+  background: #5d4037;
+  border: 1px solid #f57c00;
+  color: #ffe0b2;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* ── Inspect panel ── */
+.inspect-panel {
+  background: #1a1d23;
+  border: 1px solid #3a3f4a;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.inspect-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: #61dafb;
+  font-size: 14px;
+}
+.inspect-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+}
+.inspect-close:hover { color: white; }
+
+.inspect-sheet-title {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.inspect-table-wrap { overflow-x: auto; }
+
+.inspect-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+.inspect-table th, .inspect-table td {
+  border: 1px solid #3a3f4a;
+  padding: 4px 8px;
+  text-align: left;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.inspect-table th { background: #282c34; color: #61dafb; }
+.inspect-rownum { color: #666; font-size: 11px; }
+
+.inspect-parsed pre {
+  background: #282c34;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  overflow-x: auto;
+  max-height: 300px;
+  color: #abe;
+}
+
+/* ── Parser trace ── */
+.inspect-trace {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.trace-employee {
+  background: #1e2a1e;
+  border: 1px solid #2e4a2e;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+
+.trace-emp-name {
+  font-weight: bold;
+  color: #aed581;
+  margin-bottom: 4px;
+}
+
+.trace-time-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.trace-cell {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.trace-cell.match { background: #1b3320; color: #69f0ae; border: 1px solid #2e7d32; }
+.trace-cell.nomatch { background: #3e1a1a; color: #ff8a80; border: 1px solid #7f1d1d; }
+
+.trace-header {
+  color: #61dafb;
+  padding: 3px 0;
+  font-size: 12px;
+}
+
+.trace-date-raw {
+  color: #aaa;
+  font-size: 11px;
+  font-family: monospace;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.trace-section {
+  color: #888;
+  padding: 2px 0;
+  font-size: 11px;
+}
+
+.trace-other {
+  color: #666;
+  font-size: 11px;
+}
+
+.schedule-loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #aaa;
+  font-size: 16px;
+}
+
+/* ── Legend ── */
+.schedule-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #ccc;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.closing-dot {
+  background: transparent;
+  border: 2px dashed #fff;
+}
+
+/* ── GANTT VIEW ── */
+.gantt-wrapper {
+  background: #1e2128;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #3a3f47;
+}
+
+.gantt-name-col {
+  width: 180px;
+  min-width: 180px;
+  flex-shrink: 0;
+  padding: 0 10px;
+  font-size: 13px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Day headers */
+.gantt-day-headers {
+  display: flex;
+  border-bottom: 2px solid #3a3f47;
+  background: #282c34;
+}
+
+.gantt-day-header {
+  flex: 1;
+  padding: 8px 4px;
+  text-align: center;
+  border-right: 1px solid #3a3f47;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day-abbr {
+  font-weight: bold;
+  font-size: 14px;
+  color: #61dafb;
+}
+
+.day-date {
+  font-size: 11px;
+  color: #888;
+}
+
+/* Body rows */
+.gantt-body {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.gantt-row {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 1px solid #2a2f37;
+}
+
+.gantt-row:hover { background: #252930; }
+
+.gantt-row .gantt-name-col {
+  color: #ccc;
+  height: 100%;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  border-right: 1px solid #3a3f47;
+}
+
+.gantt-emp-name {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.gantt-emp-job {
+  font-size: 10px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.gantt-cell {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  border-right: 1px solid #2a2f37;
+}
+
+.gantt-gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #2a2f37;
+  pointer-events: none;
+}
+
+/* Shift bars */
+.shift-bar {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.shift-bar:hover {
+  opacity: 1;
+  transform: scaleY(1.08);
+  z-index: 5;
+}
+
+.shift-bar.closing {
+  border: 2px dashed rgba(255,255,255,0.5);
+}
+
+.shift-bar-label {
+  font-size: 10px;
+  color: #282c34;
+  font-weight: bold;
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Time axis */
+.gantt-time-axis {
+  display: flex;
+  background: #1a1d24;
+  border-top: 1px solid #3a3f47;
+  height: 28px;
+}
+
+.gantt-time-track {
+  flex: 1;
+  position: relative;
+}
+
+.gantt-hour-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #666;
+  top: 6px;
+  white-space: nowrap;
+}
+
+/* No data */
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+/* ── DAY VIEW ── */
+.day-view {
+  background: #1e2128;
+  border-radius: 10px;
+  border: 1px solid #3a3f47;
+  overflow: hidden;
+}
+
+.day-tabs {
+  display: flex;
+  background: #282c34;
+  border-bottom: 2px solid #3a3f47;
+  overflow-x: auto;
+}
+
+.day-tab {
+  padding: 10px 16px;
+  background: none;
+  color: #aaa;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.day-tab:hover { color: white; background: #2e3340; }
+.day-tab.active { color: #61dafb; border-bottom-color: #61dafb; }
+.day-tab-date { font-size: 10px; color: #666; }
+.day-tab.active .day-tab-date { color: #4fa8c5; }
+
+.day-timeline {
+  display: flex;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.day-hours {
+  width: 70px;
+  flex-shrink: 0;
+  background: #1a1d24;
+  border-right: 1px solid #3a3f47;
+}
+
+.day-hour {
+  height: 60px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+  padding-right: 8px;
+  justify-content: flex-end;
+  border-bottom: 1px solid #2a2f37;
+}
+
+.day-hour span {
+  font-size: 11px;
+  color: #555;
+}
+
+.day-shifts {
+  flex: 1;
+}
+
+.day-hour-row {
+  min-height: 60px;
+  border-bottom: 1px solid #2a2f37;
+  padding: 4px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-content: flex-start;
+}
+
+.day-shift-card {
+  background: #2a2f37;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 180px;
+}
+
+.day-shift-card:hover { background: #353b44; }
+.day-shift-card.closing { box-shadow: 0 0 0 1px rgba(255,255,255,0.2); }
+
+.day-shift-name {
+  font-size: 13px;
+  font-weight: bold;
+  color: #ddd;
+}
+
+.day-shift-time {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.day-shift-role {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.closing-badge {
+  font-size: 10px;
+  background: rgba(255,255,255,0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #ccc;
+  align-self: flex-start;
+}
+
+/* ── Tooltip ── */
+.shift-tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: #1a1d24;
+  border: 1px solid #61dafb;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: white;
+  pointer-events: none;
+  min-width: 160px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.shift-tooltip strong {
+  display: block;
+  color: #61dafb;
+  margin-bottom: 4px;
+}
+
+.tooltip-closing {
+  color: #ffd700;
+  margin-top: 4px;
+}
