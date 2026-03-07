@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employee, Shift
+from .models import Employee, Shift, StaffZone, ZONE_FIELDS
 
 
 class ShiftSerializer(serializers.ModelSerializer):
@@ -8,7 +8,7 @@ class ShiftSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shift
-        fields = ['id', 'employee_name', 'primary_job', 'date', 'day_label', 'start_time', 'end_time', 'role', 'is_closing']
+        fields = ['id', 'employee_name', 'primary_job', 'date', 'day_label', 'start_time', 'end_time', 'role']
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -17,3 +17,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['id', 'name', 'primary_job', 'shifts']
+
+
+class StaffZoneSerializer(serializers.ModelSerializer):
+    employee_id = serializers.IntegerField(source='employee.id', read_only=True)
+    name = serializers.CharField(source='employee.name', read_only=True)
+
+    class Meta:
+        model = StaffZone
+        fields = ['employee_id', 'name'] + ZONE_FIELDS

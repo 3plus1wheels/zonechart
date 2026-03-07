@@ -10,6 +10,6 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(Shift)
 class ShiftAdmin(admin.ModelAdmin):
-    list_display = ['employee', 'date', 'day_label', 'start_time', 'end_time', 'role', 'is_closing']
-    list_filter = ['date', 'day_label', 'is_closing']
+    list_display = ['employee', 'date', 'day_label', 'start_time', 'end_time', 'role']
+    list_filter = ['date', 'day_label', 'role']
     search_fields = ['employee__name', 'role']

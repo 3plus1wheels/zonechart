@@ -50,7 +50,11 @@ function addDays(date, days) {
 }
 
 function toYMD(date) {
-  return date.toISOString().split('T')[0];
+  // Use local date parts to avoid UTC-offset shifting the day
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 function formatShortDate(date) {
@@ -63,6 +67,7 @@ function ScheduleTab() {
   const [error, setError] = useState(null);
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState(null);
+  const [importTraceback, setImportTraceback] = useState(null);
   const [inspecting, setInspecting] = useState(false);
   const [inspectResult, setInspectResult] = useState(null);
   const [weekStart, setWeekStart] = useState(() => getMondayOfWeek(new Date()));
@@ -130,6 +135,7 @@ function ScheduleTab() {
     if (!file) return;
     setImporting(true);
     setImportResult(null);
+    setImportTraceback(null);
     setInspectResult(null);
     setError(null);
 
@@ -143,10 +149,18 @@ function ScheduleTab() {
         body: formData,
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Import failed');
+      if (!res.ok) {
+        if (data.traceback) setImportTraceback(data.traceback);
+        throw new Error(data.error || 'Import failed');
+      }
       setImportResult(data);
       if ((data.shifts_created ?? 0) > 0 || (data.shifts_updated ?? 0) > 0) {
-        fetchShifts();
+        if (data.week_start) {
+          // Navigate to the imported week — useEffect will re-fetch automatically
+          setWeekStart(new Date(data.week_start + 'T00:00:00'));
+        } else {
+          fetchShifts();
+        }
       }
     } catch (err) {
       setError(err.message);
@@ -390,7 +404,14 @@ function ScheduleTab() {
       </div>
 
       {/* Messages */}
-      {error && <div className="schedule-error">⚠️ {error}</div>}
+      {error && (
+        <div className="schedule-error">
+          <span>⚠️ {error}</span>
+          {importTraceback && (
+            <pre className="schedule-traceback">{importTraceback}</pre>
+          )}
+        </div>
+      )}
       {importResult && (() => {
         const created = importResult.shifts_created ?? 0;
         const updated = importResult.shifts_updated ?? 0;

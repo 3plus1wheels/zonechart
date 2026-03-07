@@ -76,7 +76,6 @@ class Command(BaseCommand):
                         "end_time": record["end_time"],
                         "day_label": record["day_label"],
                         "role": record["role"],
-                        "is_closing": record["is_closing"],
                     },
                 )
                 if shift_created:
