@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import API_BASE from './config';
 import './Schedule.css';
 
 const HOUR_START = 6;   // 6 AM
@@ -84,7 +85,7 @@ function ScheduleTab() {
     setError(null);
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/schedule/shifts/?week_start=${toYMD(weekStart)}`,
+        `${API_BASE}/api/schedule/shifts/?week_start=${toYMD(weekStart)}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error('Failed to fetch shifts');
@@ -143,7 +144,7 @@ function ScheduleTab() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/schedule/import/', {
+      const res = await fetch(`${API_BASE}/api/schedule/import/`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -182,7 +183,7 @@ function ScheduleTab() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/schedule/inspect/', {
+      const res = await fetch(`${API_BASE}/api/schedule/inspect/`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

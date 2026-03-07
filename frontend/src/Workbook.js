@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import API_BASE from './config';
 import './Workbook.css';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -492,7 +493,7 @@ export default function Workbook() {
     setOverrides({});
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/schedule/workbook/?week_start=${toYMD(weekStart)}&day=${activeDay}`,
+        `${API_BASE}/api/schedule/workbook/?week_start=${toYMD(weekStart)}&day=${activeDay}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error('Failed to fetch workbook');
@@ -520,7 +521,7 @@ export default function Workbook() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/schedule/import/', {
+      const res = await fetch(`${API_BASE}/api/schedule/import/`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

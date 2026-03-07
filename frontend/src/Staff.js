@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import API_BASE from './config';
 import './Staff.css';
 
 const ZONES = ['mens', 'womens', 'cash', 'fits', 'greet', 'boh'];
@@ -27,7 +28,7 @@ export default function Staff() {
   const fetchStaff = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/schedule/staff/', {
+      const res = await fetch(`${API_BASE}/api/schedule/staff/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(`${res.status}`);
@@ -55,7 +56,7 @@ export default function Staff() {
 
     setSaving(prev => ({ ...prev, [employeeId]: true }));
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/schedule/staff/${employeeId}/`, {
+      const res = await fetch(`${API_BASE}/api/schedule/staff/${employeeId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
