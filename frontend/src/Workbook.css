@@ -12,6 +12,12 @@
   margin-bottom: 12px;
 }
 
+.wb-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .wb-week-nav {
   display: flex;
   align-items: center;
@@ -76,6 +82,116 @@
 
 .wb-day-abbr { font-weight: 700; font-size: 14px; }
 .wb-day-date { font-size: 11px; opacity: 0.8; }
+
+/* ── Body layout: goals on left, zone chart on right ── */
+.wb-body-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+/* ── Today's Goals panel ── */
+.wb-goals-panel {
+  flex: 0 0 260px;
+  min-width: 220px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.wb-goals-header {
+  background: #c62828;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 8px;
+}
+
+.wb-goals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.wb-goals-table tr {
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.wb-goals-table tr:last-child { border-bottom: none; }
+
+.wb-goals-label {
+  padding: 5px 8px;
+  color: #aaa;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.wb-goals-value {
+  padding: 5px 10px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 12px;
+  color: #e0e0e0;
+  min-width: 80px;
+}
+
+.wb-goals-plain { cursor: default; }
+
+.wb-goals-highlight .wb-goals-label,
+.wb-goals-highlight .wb-goals-value {
+  background: #fff9c4;
+  color: #333;
+}
+
+.wb-goals-computed .wb-goals-value {
+  color: #66bb6a;
+  font-weight: 900;
+}
+
+.wb-goals-section-header {
+  background: #1a1a2e;
+  color: #90caf9;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 6px 8px;
+  text-transform: uppercase;
+}
+
+/* editable cell hover */
+.wb-editable {
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.wb-editable:hover { background: rgba(255,255,255,0.07) !important; }
+
+.wb-inline-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #1a73e8;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-align: right;
+  outline: none;
+  padding: 2px 4px;
+}
+
+.wb-cell-empty { color: #666; font-weight: 400; }
+
+/* ── Zone section (right side) ── */
+.wb-zone-section {
+  flex: 1;
+  min-width: 0;
+}
 
 /* ── Table ── */
 .wb-table-wrap {
@@ -198,42 +314,366 @@
 }
 .wb-reset-btn:hover { background: #4a2a2a; }
 
-/* ── Clickable / overridden cells ── */
-.wb-hour-clickable {
+/* ── Customize KPIs button ── */
+.wb-customize-btn {
+  background: #1a2a2a;
+  border: 1px solid #546e7a;
+  color: #b0bec5;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 13px;
   cursor: pointer;
-  user-select: none;
-  position: relative;
+  transition: background 0.15s;
 }
-.wb-hour-clickable:hover { filter: brightness(1.15); }
+.wb-customize-btn:hover { background: #243030; }
+.wb-customize-btn.active {
+  background: #0d2a2a;
+  border-color: #26c6da;
+  color: #80deea;
+}
 
-.wb-overridden::after {
-  content: '✎';
-  font-size: 9px;
+/* ── KPI editor panel ── */
+.wb-kpi-editor {
+  background: #181f20;
+  border: 1px solid #37474f;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.wb-kpi-editor-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #80deea;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.wb-kpi-editor-sub {
+  font-weight: 400;
+  color: #607d8b;
+  text-transform: none;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.wb-kpi-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.wb-kpi-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #263238;
+  border: 1px solid #455a64;
+  border-radius: 20px;
+  padding: 3px 8px 3px 12px;
+}
+
+.wb-kpi-item-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #cfd8dc;
+}
+
+.wb-kpi-remove-btn {
+  background: none;
+  border: none;
+  color: #ef9a9a;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
   opacity: 0.7;
-  position: absolute;
-  top: 2px;
-  right: 3px;
+  transition: opacity 0.1s;
+}
+.wb-kpi-remove-btn:hover { opacity: 1; }
+
+.wb-kpi-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* ── Zone picker dropdown ── */
+.wb-kpi-add-input {
+  background: #1e2a2a;
+  border: 1px solid #455a64;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 12px;
+  padding: 5px 10px;
+  outline: none;
+  width: 200px;
+}
+.wb-kpi-add-input:focus { border-color: #26c6da; }
+
+.wb-kpi-add-btn {
+  background: #1a3a2a;
+  border: 1px solid #4caf50;
+  color: #a5d6a7;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.wb-kpi-add-btn:hover { background: #1f4a30; }
+
+.wb-kpi-reset-btn {
+  background: none;
+  border: 1px solid #546e7a;
+  color: #90a4ae;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.wb-kpi-reset-btn:hover { background: #1e2a2a; color: #cfd8dc; }
+
+/* ── Import button ── */
+.wb-import-btn {
+  background: #1a2a3a;
+  border: 1px solid #1a73e8;
+  color: #90caf9;
+  border-radius: 6px;
+  padding: 5px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.wb-import-btn:hover:not(:disabled) { background: #1e3a5a; }
+.wb-import-btn:disabled { opacity: 0.5; cursor: default; }
+
+.wb-import-result {
+  background: #1b3a1b;
+  border: 1px solid #4caf50;
+  color: #a5d6a7;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+/* ── Print button ── */
+.wb-print-btn {
+  background: #1a3a1a;
+  border: 1px solid #4caf50;
+  color: #a5d6a7;
+  border-radius: 6px;
+  padding: 5px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.wb-print-btn:hover { background: #2a4a2a; }
+
+/* ── Hourly Segments table ── */
+.wb-hs-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-bottom: 0;
+}
+
+.wb-hs-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 11px;
+  min-width: 1000px;
+}
+
+.wb-hs-section-title {
+  background: #c62828;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 8px;
+}
+
+.wb-hs-table thead tr:nth-child(2) th {
+  background: #252525;
+  color: #bbb;
+  text-align: center;
+  padding: 5px 6px;
+  border-bottom: 1px solid #333;
+  font-size: 10px;
+  white-space: nowrap;
+  border-left: 1px solid #2a2a2a;
+}
+
+.wb-hs-row-label {
+  padding: 4px 10px;
+  color: #ccc;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: 200px;
+  border-right: 1px solid #333;
+}
+
+.wb-hs-col-header {
+  min-width: 72px;
+}
+
+.wb-hs-cell {
+  padding: 4px 5px;
+  text-align: center;
+  border-left: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 11px;
+}
+
+.wb-hs-cell.wb-editable:hover { background: rgba(255,255,255,0.07); }
+
+.wb-hs-derived {
+  color: #80cbc4;
+  font-style: italic;
+}
+
+.wb-hs-highlight .wb-hs-row-label,
+.wb-hs-highlight .wb-hs-cell {
+  background: #fff9c4;
+  color: #333;
+}
+
+.wb-hs-spacer td {
+  height: 6px;
+  background: #1a1a1a;
+}
+
+.wb-hs-notes-header {
+  min-width: 140px;
+  font-size: 10px;
+  text-align: center;
+  background: #1a1a2e !important;
+  color: #90caf9 !important;
+  padding: 4px 8px !important;
+}
+
+.wb-hs-notes-sub {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 9px;
+  color: #aaa;
+}
+
+.wb-hs-notes-cell {
+  background: #1c1c1c;
+  border-left: 1px solid #333;
+  vertical-align: top;
+}
+
+.wb-hs-ok { color: #66bb6a; font-size: 11px; font-weight: 700; }
+.wb-hs-warning { color: #ef9a9a; font-size: 11px; font-weight: 700; }
+
+/* ── Zone picker (portal) ── */
 .wb-zone-picker {
-  position: absolute;
   position: fixed;
   z-index: 9999;
-  min-width: 110px;
   background: #1e1e1e;
   border: 1px solid #444;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 220px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .wb-zone-option {
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  transition: filter 0.1s;
+  opacity: 0.85;
+  transition: opacity 0.1s;
 }
-.wb-zone-option:hover { filter: brightness(1.2); }
-.wb-zone-option.selected { outline: 2px solid rgba(255,255,255,0.4) inset; }
+
+.wb-zone-option:hover { opacity: 1; transform: scale(1.05); }
+.wb-zone-option.selected { outline: 2px solid #fff; opacity: 1; }
+
+.wb-hour-clickable { cursor: pointer; }
+.wb-overridden { outline: 2px solid #fff9 inset; }
+
+/* ── Print styles ── */
+@page {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+
+  /* Hide nav, tabs, action buttons */
+  .App-header, .wb-day-tabs, .wb-topbar { display: none !important; }
+
+  .wb-root { padding: 4px; color: #000; font-size: 9px; }
+
+  /* Force everything to fit page width */
+  .wb-hs-wrap, .wb-body-layout, .wb-table-wrap {
+    width: 100%;
+    overflow: visible !important;
+  }
+
+  .wb-hs-table, .wb-goals-table, .wb-table {
+    font-size: 8px;
+    width: 100%;
+    color: #000;
+  }
+
+  /* Scale tables to fit landscape width */
+  .wb-hs-table { min-width: unset !important; }
+  .wb-table    { min-width: unset !important; }
+
+  /* Shrink columns */
+  .wb-hs-col-header, .wb-hs-row-label { white-space: normal; }
+  .wb-col-hour { min-width: 52px !important; }
+  .wb-col-name { min-width: 70px !important; }
+  .wb-col-shift { min-width: 50px !important; }
+
+  .wb-hs-row-label, .wb-hs-cell, .wb-goals-label, .wb-goals-value,
+  .wb-name-cell, .wb-shift-cell, .wb-hour-cell,
+  .wb-table thead tr:first-child th,
+  .wb-table thead tr:nth-child(2) th,
+  .wb-hs-table thead tr:nth-child(2) th {
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #999 !important;
+  }
+
+  .wb-hs-highlight .wb-hs-row-label,
+  .wb-hs-highlight .wb-hs-cell,
+  .wb-goals-highlight .wb-goals-label,
+  .wb-goals-highlight .wb-goals-value {
+    background: #fffde7 !important;
+    color: #000 !important;
+  }
+
+  .wb-goals-section-header, .wb-hs-section-title {
+    background: #c62828 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .wb-body-layout { display: flex !important; flex-direction: row !important; }
+  .wb-goals-panel { border: 1px solid #aaa !important; }
+  .wb-hs-wrap, .wb-table-wrap { border: 1px solid #aaa !important; }
+
+  .wb-legend { display: none; }
+  .wb-print-btn, .wb-reset-btn { display: none !important; }
+  .App-header { display: none !important; }
+}
+
+
+

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
-import ScheduleTab from './ScheduleTab';
 import Workbook from './Workbook';
 import Staff from './Staff';
 import './App.css';
 
 function Dashboard() {
-  const [activeTab, setActiveTab] = useState('schedule');
+  const [activeTab, setActiveTab] = useState('workbook');
   const { user, logout } = useAuth();
 
   return (
@@ -21,12 +20,6 @@ function Dashboard() {
         </div>
 
         <nav className="nav-tabs">
-          <button
-            className={`nav-tab${activeTab === 'schedule' ? ' active' : ''}`}
-            onClick={() => setActiveTab('schedule')}
-          >
-            Schedule
-          </button>
           <button
             className={`nav-tab${activeTab === 'workbook' ? ' active' : ''}`}
             onClick={() => setActiveTab('workbook')}
@@ -43,7 +36,6 @@ function Dashboard() {
       </header>
 
       <main className="tab-content">
-        {activeTab === 'schedule' && <ScheduleTab />}
         {activeTab === 'workbook' && <Workbook />}
         {activeTab === 'staff'    && <Staff />}
       </main>
