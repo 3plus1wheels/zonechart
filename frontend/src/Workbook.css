@@ -320,8 +320,8 @@
   border: 1px solid #546e7a;
   color: #b0bec5;
   border-radius: 6px;
-  padding: 5px 14px;
-  font-size: 13px;
+  padding: clamp(4px, 0.4vw, 6px) clamp(10px, 1vw, 16px);
+  font-size: clamp(10px, 0.82vw, 14px);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -608,71 +608,228 @@
 /* ── Print styles ── */
 @page {
   size: A4 landscape;
-  margin: 8mm;
+  margin: 6mm 6mm 6mm 6mm;
 }
 
 @media print {
-  body { background: #fff !important; color: #000 !important; }
+  body { background: #fff !important; color: #000 !important; margin: 0 !important; padding: 0 !important; }
 
   /* Hide nav, tabs, action buttons */
-  .App-header, .wb-day-tabs, .wb-topbar { display: none !important; }
+  .App-header, .wb-day-tabs, .wb-topbar, .wb-kpi-editor,
+  .wb-import-result, .wb-legend { display: none !important; }
 
-  .wb-root { padding: 4px; color: #000; font-size: 9px; }
-
-  /* Force everything to fit page width */
-  .wb-hs-wrap, .wb-body-layout, .wb-table-wrap {
-    width: 100%;
-    overflow: visible !important;
-  }
-
-  .wb-hs-table, .wb-goals-table, .wb-table {
-    font-size: 8px;
-    width: 100%;
+  /* Root fills the full printable area */
+  .wb-root {
+    padding: 0 !important;
+    margin: 0 !important;
     color: #000;
+    width: 100% !important;
+    box-sizing: border-box;
   }
 
-  /* Scale tables to fit landscape width */
-  .wb-hs-table { min-width: unset !important; }
-  .wb-table    { min-width: unset !important; }
+  /* ── Hourly Segments ── */
+  .wb-hs-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    border: 1px solid #888 !important;
+    margin-bottom: 4mm !important;
+  }
 
-  /* Shrink columns */
-  .wb-hs-col-header, .wb-hs-row-label { white-space: normal; }
-  .wb-col-hour { min-width: 52px !important; }
-  .wb-col-name { min-width: 70px !important; }
-  .wb-col-shift { min-width: 50px !important; }
-
-  .wb-hs-row-label, .wb-hs-cell, .wb-goals-label, .wb-goals-value,
-  .wb-name-cell, .wb-shift-cell, .wb-hour-cell,
-  .wb-table thead tr:first-child th,
-  .wb-table thead tr:nth-child(2) th,
-  .wb-hs-table thead tr:nth-child(2) th {
+  .wb-hs-table {
+    font-size: 9px !important;
+    width: 100% !important;
+    min-width: unset !important;
+    table-layout: fixed !important;
     color: #000 !important;
-    background: #fff !important;
-    border-color: #999 !important;
+    border-collapse: collapse !important;
   }
 
-  .wb-hs-highlight .wb-hs-row-label,
-  .wb-hs-highlight .wb-hs-cell,
-  .wb-goals-highlight .wb-goals-label,
-  .wb-goals-highlight .wb-goals-value {
-    background: #fffde7 !important;
-    color: #000 !important;
-  }
-
-  .wb-goals-section-header, .wb-hs-section-title {
+  .wb-hs-section-title {
+    font-size: 11px !important;
+    padding: 5px !important;
     background: #c62828 !important;
     color: #fff !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  .wb-body-layout { display: flex !important; flex-direction: row !important; }
-  .wb-goals-panel { border: 1px solid #aaa !important; }
-  .wb-hs-wrap, .wb-table-wrap { border: 1px solid #aaa !important; }
+  .wb-hs-row-label {
+    width: 120px !important;
+    min-width: unset !important;
+    padding: 5px 6px !important;
+    font-size: 8px !important;
+    white-space: normal !important;
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #888 !important;
+  }
 
-  .wb-legend { display: none; }
-  .wb-print-btn, .wb-reset-btn { display: none !important; }
-  .App-header { display: none !important; }
+  .wb-hs-col-header {
+    min-width: unset !important;
+    width: auto !important;
+    white-space: nowrap !important;
+    padding: 5px 3px !important;
+    font-size: 8px !important;
+    color: #000 !important;
+    background: #f0f0f0 !important;
+    border-color: #888 !important;
+  }
+
+  .wb-hs-cell {
+    padding: 5px 3px !important;
+    font-size: 9px !important;
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #888 !important;
+    text-align: center !important;
+  }
+
+  .wb-hs-notes-header {
+    font-size: 8px !important;
+    padding: 4px !important;
+    background: #e8eaf6 !important;
+    color: #000 !important;
+  }
+
+  .wb-hs-highlight .wb-hs-row-label,
+  .wb-hs-highlight .wb-hs-cell {
+    background: #fffde7 !important;
+    color: #000 !important;
+  }
+
+  /* ── Body layout: goals left, zone chart right ── */
+  .wb-body-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 4mm !important;
+    width: 100% !important;
+    align-items: flex-start !important;
+  }
+
+  /* ── Today's Goals ── */
+  .wb-goals-panel {
+    flex: 0 0 110px !important;
+    width: 110px !important;
+    min-width: unset !important;
+    border: 1px solid #888 !important;
+    overflow: hidden !important;
+  }
+
+  .wb-goals-header {
+    font-size: 8px !important;
+    padding: 4px !important;
+    background: #c62828 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .wb-goals-table {
+    font-size: 7.5px !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  .wb-goals-label {
+    font-size: 6.5px !important;
+    padding: 4px 4px !important;
+    white-space: normal !important;
+    color: #000 !important;
+    background: #fff !important;
+    word-break: break-word !important;
+  }
+
+  .wb-goals-value {
+    font-size: 7.5px !important;
+    padding: 4px 5px !important;
+    min-width: unset !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  .wb-goals-highlight .wb-goals-label,
+  .wb-goals-highlight .wb-goals-value {
+    background: #fffde7 !important;
+    color: #000 !important;
+  }
+
+  .wb-goals-section-header {
+    font-size: 6.5px !important;
+    padding: 4px !important;
+    background: #e8eaf6 !important;
+    color: #000 !important;
+  }
+
+  /* ── Zone chart ── */
+  .wb-zone-section {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+
+  .wb-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    border: 1px solid #888 !important;
+  }
+
+  .wb-table {
+    font-size: 9px !important;
+    width: 100% !important;
+    min-width: unset !important;
+    table-layout: fixed !important;
+    color: #000 !important;
+    border-collapse: collapse !important;
+  }
+
+  .wb-table thead tr:first-child th {
+    font-size: 11px !important;
+    padding: 6px 4px !important;
+    background: #e8eaf6 !important;
+    color: #000 !important;
+    border-color: #888 !important;
+  }
+
+  .wb-table thead tr:nth-child(2) th {
+    font-size: 8px !important;
+    padding: 5px 3px !important;
+    background: #f0f0f0 !important;
+    color: #000 !important;
+    border-color: #888 !important;
+    white-space: nowrap !important;
+  }
+
+  .wb-col-name  { width: 72px !important; min-width: unset !important; }
+  .wb-col-shift { width: 44px !important; min-width: unset !important; }
+  .wb-col-hour  { width: auto !important; min-width: unset !important; }
+
+  .wb-name-cell {
+    padding: 5px 4px 5px 6px !important;
+    font-size: 9px !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  .wb-shift-cell {
+    padding: 5px 3px !important;
+    font-size: 8.5px !important;
+    color: #333 !important;
+    background: #fff !important;
+  }
+
+  .wb-hour-cell {
+    padding: 5px 2px !important;
+    font-size: 8px !important;
+    font-weight: 700 !important;
+    border-color: #888 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .wb-table tbody tr { border-bottom: 1px solid #ccc !important; }
+
+  .wb-print-btn, .wb-reset-btn, .wb-customize-btn { display: none !important; }
 }
 
 
