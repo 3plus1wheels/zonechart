@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .auth_serializers import RegisterSerializer, UserSerializer
+from .auth_serializers import RegisterSerializer, ThemePreferenceSerializer, UserSerializer
+from .models import ThemePreference
 
 
 class RegisterView(generics.CreateAPIView):
@@ -26,4 +27,27 @@ class UserDetailView(APIView):
 
     def get(self, request):
         serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+
+class ThemePreferenceView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        preference, _ = ThemePreference.objects.get_or_create(user=request.user)
+        serializer = ThemePreferenceSerializer(preference)
+        return Response(serializer.data)
+
+    def put(self, request):
+        preference, _ = ThemePreference.objects.get_or_create(user=request.user)
+        serializer = ThemePreferenceSerializer(preference, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def patch(self, request):
+        preference, _ = ThemePreference.objects.get_or_create(user=request.user)
+        serializer = ThemePreferenceSerializer(preference, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)

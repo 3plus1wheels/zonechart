@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
+import { Link } from 'react-router-dom';
+import { AlertCircle, ShieldCheck } from 'lucide-react';
+import FloorlyLogo from './FloorlyLogo';
 import './Auth.css';
 
-function Login({ onToggle }) {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,8 +28,20 @@ function Login({ onToggle }) {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Login</h2>
-        {error && <div className="error-message">{error}</div>}
+        <div className="auth-logo-wrap">
+          <FloorlyLogo size="sm" color="var(--color-primary)" />
+        </div>
+        <div className="auth-card-title-row">
+          <ShieldCheck className="auth-card-icon" />
+          <h2>Sign In</h2>
+        </div>
+        <p className="auth-subtitle">Access your daily zone strategy and team performance dashboard.</p>
+        {error && (
+          <div className="error-message">
+            <AlertCircle />
+            <span>{error}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Username</label>
@@ -37,6 +52,7 @@ function Login({ onToggle }) {
               required
               disabled={loading}
             />
+            <div className="auth-helper">Use the username assigned to your Floorly account.</div>
           </div>
           <div className="form-group">
             <label>Password</label>
@@ -47,16 +63,17 @@ function Login({ onToggle }) {
               required
               disabled={loading}
             />
+            <div className="auth-helper">Passwords are case-sensitive.</div>
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         <p className="toggle-text">
           Don't have an account?{' '}
-          <span className="toggle-link" onClick={onToggle}>
+          <Link className="toggle-link" to="/register">
             Register here
-          </span>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
+import { Link } from 'react-router-dom';
+import { AlertCircle, UserRoundPlus } from 'lucide-react';
+import FloorlyLogo from './FloorlyLogo';
 import './Auth.css';
 
-function Register({ onToggle }) {
+function Register() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -12,6 +15,9 @@ function Register({ onToggle }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
+
+  const passwordTooShort = formData.password.length > 0 && formData.password.length < 8;
+  const passwordsMismatch = formData.password2.length > 0 && formData.password !== formData.password2;
 
   const handleChange = (e) => {
     setFormData({
@@ -26,6 +32,11 @@ function Register({ onToggle }) {
 
     if (formData.password !== formData.password2) {
       setError("Passwords don't match");
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
       return;
     }
 
@@ -54,8 +65,20 @@ function Register({ onToggle }) {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Register</h2>
-        {error && <div className="error-message" style={{ whiteSpace: 'pre-line' }}>{error}</div>}
+        <div className="auth-logo-wrap">
+          <FloorlyLogo size="sm" color="var(--color-primary)" />
+        </div>
+        <div className="auth-card-title-row">
+          <UserRoundPlus className="auth-card-icon" />
+          <h2>Create Account</h2>
+        </div>
+        <p className="auth-subtitle">Set up your Floorly workspace and start planning with precision.</p>
+        {error && (
+          <div className="error-message" style={{ whiteSpace: 'pre-line' }}>
+            <AlertCircle />
+            <span>{error}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Username *</label>
@@ -88,6 +111,8 @@ function Register({ onToggle }) {
               required
               disabled={loading}
             />
+            <div className="auth-helper">At least 8 characters.</div>
+            {passwordTooShort && <div className="field-error">Password is too short.</div>}
           </div>
           <div className="form-group">
             <label>Confirm Password *</label>
@@ -99,16 +124,17 @@ function Register({ onToggle }) {
               required
               disabled={loading}
             />
+            {passwordsMismatch && <div className="field-error">Passwords do not match.</div>}
           </div>
-          <button type="submit" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+          <button type="submit" disabled={loading || passwordTooShort || passwordsMismatch}>
+            {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
         <p className="toggle-text">
           Already have an account?{' '}
-          <span className="toggle-link" onClick={onToggle}>
+          <Link className="toggle-link" to="/login">
             Login here
-          </span>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AuthProvider, useAuth } from './AuthContext';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { LoaderCircle } from 'lucide-react';
+import LandingPage from './LandingPage';
 import Login from './Login';
 import Register from './Register';
 import Dashboard from './Dashboard';
@@ -7,33 +10,41 @@ import './App.css';
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const [showRegister, setShowRegister] = useState(false);
 
   if (loading) {
     return (
       <div className="App">
         <div className="loading-container">
-          <p>Loading...</p>
+          <div className="state-card inline">
+            <LoaderCircle className="state-icon" />
+            <div>
+              <p className="state-title">Loading workspace</p>
+              <p className="state-copy">Checking your authentication session.</p>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (!user) {
-    return showRegister ? (
-      <Register onToggle={() => setShowRegister(false)} />
-    ) : (
-      <Login onToggle={() => setShowRegister(true)} />
-    );
-  }
-
-  return <Dashboard />;
+  return user ? (
+    <Dashboard />
+  ) : (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </AuthProvider>
   );
 }

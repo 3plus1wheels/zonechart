@@ -1,6 +1,6 @@
 .schedule-tab {
   padding: 20px;
-  color: white;
+  color: var(--color-text);
   position: relative;
   min-height: 400px;
 }
@@ -24,7 +24,7 @@
 
 .schedule-header-left h2 {
   margin: 0;
-  color: #61dafb;
+  color: var(--color-primary);
   font-size: 22px;
 }
 
@@ -43,48 +43,48 @@
 
 .week-nav button {
   padding: 6px 12px;
-  background: #3a3f47;
-  color: white;
-  border: none;
-  border-radius: 6px;
+  background: #fff;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
   transition: background 0.2s;
 }
 
-.week-nav button:hover { background: #4a505a; }
+.week-nav button:hover { background: #f8f4ec; }
 
 .week-label {
   font-size: 15px;
   font-weight: 600;
   min-width: 180px;
   text-align: center;
-  color: #ddd;
+  color: var(--color-text);
 }
 
 .today-btn {
   font-size: 13px !important;
   padding: 6px 10px !important;
-  background: #61dafb !important;
-  color: #282c34 !important;
+  background: var(--color-accent) !important;
+  color: var(--color-primary) !important;
   font-weight: bold;
 }
 
-.today-btn:hover { background: #4fa8c5 !important; }
+.today-btn:hover { background: #d4b65c !important; }
 
 /* ── View toggle ── */
 .view-toggle {
   display: flex;
-  border-radius: 8px;
+  border-radius: 999px;
   overflow: hidden;
-  border: 1px solid #4a505a;
+  border: 1px solid var(--color-border);
 }
 
 .view-toggle button {
   padding: 7px 14px;
-  background: #3a3f47;
-  color: #aaa;
+  background: #fff;
+  color: var(--color-muted);
   border: none;
   cursor: pointer;
   font-size: 13px;
@@ -92,44 +92,45 @@
 }
 
 .view-toggle button.active {
-  background: #61dafb;
-  color: #282c34;
+  background: rgba(201, 168, 76, 0.18);
+  color: var(--color-primary);
   font-weight: bold;
 }
 
 /* ── Import button ── */
 .import-btn {
   padding: 8px 16px;
-  background: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  background: #fff;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
   transition: background 0.2s;
 }
 
-.import-btn:hover:not(:disabled) { background: #388e3c; }
+.import-btn:hover:not(:disabled) { background: #f8f4ec; }
 .import-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .inspect-btn {
   padding: 8px 14px;
-  background: #555;
-  color: #ddd;
-  border: 1px solid #666;
-  border-radius: 8px;
+  background: #fff;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   cursor: pointer;
   font-size: 14px;
   transition: background 0.2s;
 }
-.inspect-btn:hover:not(:disabled) { background: #666; }
+.inspect-btn:hover:not(:disabled) { background: #f8f4ec; }
 .inspect-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* ── Messages ── */
 .schedule-error {
-  background: #c62828;
-  color: white;
+  background: rgba(185, 56, 45, 0.12);
+  color: #8f2b21;
+  border: 1px solid rgba(185, 56, 45, 0.34);
   padding: 10px 16px;
   border-radius: 8px;
   margin-bottom: 12px;
@@ -153,8 +154,9 @@
 }
 
 .schedule-success {
-  background: #2e7d32;
-  color: white;
+  background: rgba(47, 122, 78, 0.12);
+  color: #245a39;
+  border: 1px solid rgba(47, 122, 78, 0.34);
   padding: 10px 16px;
   border-radius: 8px;
   margin-bottom: 12px;
@@ -162,9 +164,9 @@
 }
 
 .schedule-warning {
-  background: #5d4037;
-  border: 1px solid #f57c00;
-  color: #ffe0b2;
+  background: rgba(201, 168, 76, 0.2);
+  border: 1px solid rgba(201, 168, 76, 0.55);
+  color: #634f1f;
   padding: 10px 16px;
   border-radius: 8px;
   margin-bottom: 12px;
@@ -173,9 +175,9 @@
 
 /* ── Inspect panel ── */
 .inspect-panel {
-  background: #1a1d23;
-  border: 1px solid #3a3f4a;
-  border-radius: 10px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
   overflow-x: auto;
@@ -186,23 +188,23 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-  color: #61dafb;
+  color: var(--color-primary);
   font-size: 14px;
 }
 .inspect-close {
   margin-left: auto;
   background: none;
   border: none;
-  color: #aaa;
+  color: var(--color-muted);
   cursor: pointer;
   font-size: 16px;
   padding: 2px 6px;
 }
-.inspect-close:hover { color: white; }
+.inspect-close:hover { color: var(--color-primary); }
 
 .inspect-sheet-title {
   font-size: 13px;
-  color: #aaa;
+  color: var(--color-muted);
   margin-bottom: 8px;
 }
 
@@ -215,24 +217,24 @@
   white-space: nowrap;
 }
 .inspect-table th, .inspect-table td {
-  border: 1px solid #3a3f4a;
+  border: 1px solid var(--color-border);
   padding: 4px 8px;
   text-align: left;
   max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.inspect-table th { background: #282c34; color: #61dafb; }
-.inspect-rownum { color: #666; font-size: 11px; }
+.inspect-table th { background: #f3ede2; color: #6b675f; }
+.inspect-rownum { color: #8a857d; font-size: 11px; }
 
 .inspect-parsed pre {
-  background: #282c34;
+  background: #f8f5ef;
   padding: 10px;
   border-radius: 6px;
   font-size: 12px;
   overflow-x: auto;
   max-height: 300px;
-  color: #abe;
+  color: #5d5666;
 }
 
 /* ── Parser trace ── */

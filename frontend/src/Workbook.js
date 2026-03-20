@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import { AlertTriangle, Inbox, LoaderCircle, Printer, Settings2, Upload } from 'lucide-react';
 import API_BASE from './config';
 import './Workbook.css';
 
@@ -32,9 +33,9 @@ const DEFAULT_KPI_ROWS = [
   { id: 'conversion',   label: 'CONVERSION',              key: 'conversion',  computed: 'conversion' },
   { id: 'upt',          label: 'UPT',                     key: 'upt'          },
   { id: 'atv',          label: 'ATV',                     key: 'atv',         format: 'currency' },
-  { id: 'other',        label: 'OTHER:',                  key: 'other'        },
-  { id: 'actual',       label: 'HOURLY SALES ACTUAL',     key: 'actual',      format: 'currency' },
-  { id: 'cel',          label: 'CEL SIGN-OFF (INITIALS)', key: 'cel'          },
+  { id: 'other',        label: 'OTHER:',                  key: 'other',       optional: true },
+  { id: 'actual',       label: 'HOURLY SALES ACTUAL',     key: 'actual',      format: 'currency', optional: true },
+  { id: 'cel',          label: 'CEL SIGN-OFF (INITIALS)', key: 'cel',         optional: true },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -319,7 +320,7 @@ function TodaysGoals({ goals, onChange, segments }) {
 }
 
 // ─── Hourly Segments panel ────────────────────────────────────────────────────
-function HourlySegments({ goals, hourly, setHourly, segments, kpiRows }) {
+function HourlySegments({ goals, hourly, setHourly, segments, kpiRows, printFitMode }) {
   const daySales   = parseCurrency(goals.daySalesTarget) || 0;
   const dayStretch = parseCurrency(goals.stretchTarget)  || 0;
 
@@ -379,6 +380,7 @@ function HourlySegments({ goals, hourly, setHourly, segments, kpiRows }) {
     if (row.computed === 'conversion') {
       return {
         label: row.label,
+        optional: !!row.optional || String(row.id).startsWith('custom_'),
         cells: segments.map((_, i) => {
           const tr = parseFloat(hourly[i]?.traffic);
           const tx = parseFloat(hourly[i]?.transactions);
@@ -390,6 +392,7 @@ function HourlySegments({ goals, hourly, setHourly, segments, kpiRows }) {
     const fmt = row.format === 'currency' ? (v => formatCurrency(v)) : undefined;
     return {
       label: row.label,
+      optional: !!row.optional || String(row.id).startsWith('custom_'),
       cells: segments.map((_, i) => ({
         value: hourly[i]?.[row.key] ?? '',
         onChange: setCell(i, row.key),
@@ -400,7 +403,10 @@ function HourlySegments({ goals, hourly, setHourly, segments, kpiRows }) {
   });
 
   const allRows = [...fixedRows, ...kpiRowDefs];
-  const nonSpacerCount = allRows.filter(r => !r.spacer).length;
+  const visibleRows = printFitMode === 'hide-optional'
+    ? allRows.filter(r => !r.optional)
+    : allRows;
+  const nonSpacerCount = visibleRows.filter(r => !r.spacer).length;
 
   return (
     <div className="wb-hs-wrap">
@@ -418,10 +424,10 @@ function HourlySegments({ goals, hourly, setHourly, segments, kpiRows }) {
           </tr>
         </thead>
         <tbody>
-          {allRows.map((row, ri) => {
+          {visibleRows.map((row, ri) => {
             if (row.spacer) return <tr key={ri} className="wb-hs-spacer"><td colSpan={segments.length + 2} /></tr>;
             return (
-              <tr key={ri} className={row.highlight ? 'wb-hs-highlight' : ''}>
+              <tr key={ri} className={`${row.highlight ? 'wb-hs-highlight' : ''}${row.optional ? ' wb-hs-row-optional' : ''}`}>
                 <td className="wb-hs-row-label">{row.label}{row.extra && <span style={{ marginLeft: 8 }}>{row.extra}</span>}</td>
                 {row.cells.map((cell, ci) => {
                   if (cell.editable && cell.onChange) {
@@ -468,6 +474,7 @@ export default function Workbook() {
   const [kpiRows, setKpiRows] = useState(DEFAULT_KPI_ROWS);
   const [editingKpis, setEditingKpis] = useState(false);
   const [newKpiLabel, setNewKpiLabel] = useState('');
+  const [printFitMode, setPrintFitMode] = useState('balanced');
 
   // Goals state (persists per day in local storage key)
   const [goals, setGoals] = useState({
@@ -509,6 +516,7 @@ export default function Workbook() {
 
   const weekDates = DAYS.map((_, i) => addDays(weekStart, i));
   const hasOverrides = Object.keys(overrides).length > 0;
+  const optionalKpiCount = kpiRows.filter(r => r.optional || String(r.id).startsWith('custom_')).length;
 
   const handlePrint = () => window.print();
 
@@ -545,7 +553,7 @@ export default function Workbook() {
   };
 
   return (
-    <div className="wb-root">
+    <div className={`wb-root wb-print-${printFitMode}`}>
       {/* ── Week nav ── */}
       <div className="wb-topbar">
         <div className="wb-week-nav">
@@ -568,7 +576,8 @@ export default function Workbook() {
             disabled={importing}
             title="Import XLSX schedule"
           >
-            {importing ? '⏳ Importing…' : '📥 Import XLSX'}
+            <Upload style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'text-bottom' }} />
+            {importing ? 'Importing…' : 'Import XLSX'}
           </button>
           <input
             ref={fileInputRef}
@@ -582,13 +591,28 @@ export default function Workbook() {
             onClick={() => setEditingKpis(e => !e)}
             title="Customize KPI rows"
           >
-            ⚙ KPIs
+            <Settings2 style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'text-bottom' }} />
+            KPIs
           </button>
+          <select
+            className="wb-print-mode-select"
+            value={printFitMode}
+            onChange={(e) => setPrintFitMode(e.target.value)}
+            title="Control how print handles long KPI sections"
+          >
+            <option value="balanced">Print Fit: Balanced</option>
+            <option value="compact">Print Fit: Compact Rows</option>
+            <option value="hide-optional">Print Fit: Hide Optional KPI Rows</option>
+          </select>
           <button className="wb-print-btn" onClick={handlePrint} title="Print workbook">
-            🖨️ Print
+            <Printer style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'text-bottom' }} />
+            Print
           </button>
         </div>
       </div>
+      {printFitMode === 'hide-optional' && optionalKpiCount > 0 && (
+        <div className="wb-print-fit-note">Print mode will hide {optionalKpiCount} optional KPI row{optionalKpiCount > 1 ? 's' : ''} to keep one-page output.</div>
+      )}
       {importResult && (
         <div className="wb-import-result">
           ✅ Imported: {importResult.shifts_created ?? 0} created, {importResult.shifts_updated ?? 0} updated
@@ -658,7 +682,14 @@ export default function Workbook() {
       </div>
 
       {/* ── Hourly Segments (top panel) ── */}
-      <HourlySegments goals={goals} hourly={hourly} setHourly={setHourly} segments={segments} kpiRows={kpiRows} />
+      <HourlySegments
+        goals={goals}
+        hourly={hourly}
+        setHourly={setHourly}
+        segments={segments}
+        kpiRows={kpiRows}
+        printFitMode={printFitMode}
+      />
 
       {/* ── Main body: Goals + Zone Chart side by side ── */}
       <div className="wb-body-layout">
@@ -668,8 +699,24 @@ export default function Workbook() {
         {/* Right: Zone chart */}
         <div className="wb-zone-section">
           {/* ── Zone chart ── */}
-          {loading && <div className="wb-status">Loading…</div>}
-          {error   && <div className="wb-error">⚠️ {error}</div>}
+          {loading && (
+            <div className="state-card inline">
+              <LoaderCircle className="state-icon" />
+              <div>
+                <p className="state-title">Loading workbook</p>
+                <p className="state-copy">Building the Floorly map for {activeDay}.</p>
+              </div>
+            </div>
+          )}
+          {error && (
+            <div className="state-card inline error">
+              <AlertTriangle className="state-icon" />
+              <div>
+                <p className="state-title">Workbook unavailable</p>
+                <p className="state-copy">{error}</p>
+              </div>
+            </div>
+          )}
 
           {data && !loading && (
             <div className="wb-table-wrap">
@@ -677,7 +724,7 @@ export default function Workbook() {
                 <thead>
                   <tr>
                     <th className="wb-zone-header" colSpan={2 + data.col_headers.length}>
-                      ZONE CHART — {data.day.toUpperCase()}&nbsp;&nbsp;
+                      FLOORLY MAP — {data.day.toUpperCase()}&nbsp;&nbsp;
                       <span className="wb-zone-date">{data.date}</span>
                     </th>
                   </tr>
@@ -693,7 +740,13 @@ export default function Workbook() {
                   {data.rows.length === 0 ? (
                     <tr>
                       <td colSpan={2 + data.col_headers.length} className="wb-no-data">
-                        No shifts for {data.day} {data.date}. Import a schedule first.
+                        <div className="state-card inline">
+                          <Inbox className="state-icon" />
+                          <div>
+                            <p className="state-title">No shifts for {data.day} {data.date}</p>
+                            <p className="state-copy">Import the weekly schedule to generate this day’s Floorly map.</p>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -723,7 +776,13 @@ export default function Workbook() {
           )}
 
           {!data && !loading && !error && (
-            <div className="wb-no-data">No data. Import a schedule first.</div>
+            <div className="state-card inline">
+              <Inbox className="state-icon" />
+              <div>
+                <p className="state-title">No workbook data yet</p>
+                <p className="state-copy">Import a schedule to generate your first Floorly map.</p>
+              </div>
+            </div>
           )}
 
           {/* ── Legend ── */}

@@ -1,6 +1,51 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from .models import ThemePreference
+
+
+class ThemePreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ThemePreference
+        fields = (
+            'preset',
+            'color_primary',
+            'color_accent',
+            'color_background',
+            'color_surface',
+            'color_card',
+            'color_text',
+            'color_muted',
+            'updated_at',
+        )
+        read_only_fields = ('updated_at',)
+
+    def validate(self, attrs):
+        hex_fields = [
+            'color_primary',
+            'color_accent',
+            'color_background',
+            'color_surface',
+            'color_card',
+            'color_text',
+            'color_muted',
+        ]
+
+        for field_name in hex_fields:
+            if field_name in attrs:
+                value = attrs[field_name]
+                if not isinstance(value, str) or len(value) != 7 or not value.startswith('#'):
+                    raise serializers.ValidationError({field_name: 'Must be a hex color in #RRGGBB format.'})
+
+                hex_part = value[1:]
+                try:
+                    int(hex_part, 16)
+                except ValueError as exc:
+                    raise serializers.ValidationError({field_name: 'Must be a valid hex color.'}) from exc
+
+                attrs[field_name] = value.lower()
+
+        return attrs
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -28,6 +73,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    theme_preference = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'theme_preference')
+
+    def get_theme_preference(self, obj):
+        pref, _ = ThemePreference.objects.get_or_create(user=obj)
+        return ThemePreferenceSerializer(pref).data

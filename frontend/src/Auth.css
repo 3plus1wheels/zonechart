@@ -3,107 +3,176 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #282c34;
-  padding: 20px;
+  background: linear-gradient(155deg, #f6f2ea 0%, #faf8f5 42%, #f0ebe2 100%);
+  padding: 24px;
+  position: relative;
+}
+
+.auth-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
 }
 
 .auth-card {
-  background-color: #3a3f47;
+  position: relative;
+  z-index: 1;
+  background: var(--color-card);
   padding: 40px;
-  border-radius: 12px;
+  border-radius: 24px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  max-width: 440px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 24px 60px -26px rgba(13, 13, 18, 0.34);
 }
 
 .auth-card h2 {
-  margin: 0 0 30px 0;
-  color: #61dafb;
-  text-align: center;
-  font-size: 28px;
+  margin: 0 0 8px 0;
+  color: var(--color-primary);
+  text-align: left;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+}
+
+.auth-logo-wrap {
+  margin-bottom: 8px;
+  line-height: 0.9;
+}
+
+.auth-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-card-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--color-accent);
+}
+
+.auth-subtitle {
+  margin: 0 0 26px;
+  color: var(--color-muted);
+  font-size: 14px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  color: #ddd;
-  font-size: 14px;
-  font-weight: 500;
+  margin-bottom: 7px;
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  background-color: #282c34;
-  color: white;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  background: #fff;
+  color: var(--color-text);
   box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
 .form-group input::placeholder {
-  color: #888;
+  color: #9d9da8;
 }
 
 .form-group input:focus {
-  outline: 2px solid #61dafb;
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
+}
+
+.auth-helper {
+  margin-top: 6px;
+  color: #868692;
+  font-size: 12px;
+}
+
+.field-error {
+  margin-top: 6px;
+  color: #9a2f24;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 button[type="submit"] {
   width: 100%;
   padding: 14px;
-  border: none;
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: 999px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  background-color: #61dafb;
-  color: #282c34;
-  transition: background-color 0.3s;
-  margin-top: 10px;
+  background: var(--color-accent);
+  color: var(--color-primary);
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s;
+  margin-top: 14px;
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  background-color: #4fa8c5;
+  background: #d4b65c;
+  transform: translateY(-1px);
 }
 
 button[type="submit"]:disabled {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: not-allowed;
 }
 
 .error-message {
-  background-color: #ff4444;
-  color: white;
+  background: rgba(185, 56, 45, 0.12);
+  color: #8f2b21;
+  border: 1px solid rgba(185, 56, 45, 0.3);
   padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  border-radius: 10px;
+  margin-bottom: 16px;
   font-size: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.error-message svg {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .toggle-text {
   text-align: center;
-  margin-top: 20px;
-  color: #ddd;
+  margin-top: 22px;
+  color: var(--color-muted);
   font-size: 14px;
 }
 
 .toggle-link {
-  color: #61dafb;
+  color: var(--color-primary);
+  font-weight: 600;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 3px;
 }
 
 .toggle-link:hover {
-  color: #4fa8c5;
+  color: #000;
 }

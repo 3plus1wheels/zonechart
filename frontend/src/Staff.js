@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { AlertTriangle, Inbox, LoaderCircle, Users } from 'lucide-react';
 import API_BASE from './config';
 import './Staff.css';
 
@@ -84,12 +85,32 @@ export default function Staff() {
         <p className="staff-subtitle">Select each staff member's skill level per zone</p>
       </div>
 
-      {error && <div className="staff-error">{error}</div>}
+      {error && (
+        <div className="state-card inline error">
+          <AlertTriangle className="state-icon" />
+          <div>
+            <p className="state-title">Unable to load staff</p>
+            <p className="state-copy">{error}</p>
+          </div>
+        </div>
+      )}
 
       {loading ? (
-        <div className="staff-loading">Loading…</div>
+        <div className="state-card inline">
+          <LoaderCircle className="state-icon" />
+          <div>
+            <p className="state-title">Loading staff matrix</p>
+            <p className="state-copy">Syncing latest employee skill levels.</p>
+          </div>
+        </div>
       ) : rows.length === 0 ? (
-        <div className="staff-empty">No staff found. Import a schedule first.</div>
+        <div className="state-card inline">
+          <Inbox className="state-icon" />
+          <div>
+            <p className="state-title">No staff records yet</p>
+            <p className="state-copy">Import a schedule to populate your team and start assigning zone confidence.</p>
+          </div>
+        </div>
       ) : (
         <div className="staff-table-wrap">
           <table className="staff-table">
@@ -99,6 +120,7 @@ export default function Staff() {
                 {ZONE_LABELS.map(z => (
                   <th key={z} className="staff-zone-col">{z}</th>
                 ))}
+                <th className="staff-zone-col">ROLE</th>
               </tr>
             </thead>
             <tbody>
@@ -122,6 +144,10 @@ export default function Staff() {
                       </td>
                     );
                   })}
+                  <td className="staff-name-cell" style={{ fontWeight: 500, color: '#6f6f78' }}>
+                    <Users style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'text-bottom' }} />
+                    {row.primary_job || 'Associate'}
+                  </td>
                 </tr>
               ))}
             </tbody>
